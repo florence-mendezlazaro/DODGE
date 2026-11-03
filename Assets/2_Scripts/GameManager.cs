@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     private bool isGamePaused = false;
+
+    private bool isGameOver = false;
 
     [Header("DefaultUI")]
     [SerializeField] private GameObject defaultUI;
@@ -12,7 +15,12 @@ public class GameManager : MonoBehaviour
     [Header("PauseUI")]
     [SerializeField] private GameObject pauseUI;
     [SerializeField] private Button resumeButton;
-    [SerializeField] private Button quitButton;
+    [SerializeField] private Button quitButton1;
+
+    [Header("GameOverUI")]
+    [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private Button retryButton;
+    [SerializeField] private Button quitButton2;
 
     private void Awake()
     {
@@ -23,7 +31,11 @@ public class GameManager : MonoBehaviour
 
         pauseUI.SetActive(false);
         resumeButton.onClick.AddListener(() => GamePaused());
-        quitButton.onClick.AddListener(() => Debug.Log("Quit To Menu"));
+        quitButton1.onClick.AddListener(() => Debug.Log("Quit To Menu"));
+
+        gameOverUI.SetActive(false);
+        retryButton.onClick.AddListener(() => SceneManager.LoadScene(0));
+        quitButton2.onClick.AddListener(() => Debug.Log("Quit To Menu"));
     }
 
     private void GamePaused()
@@ -48,5 +60,24 @@ public class GameManager : MonoBehaviour
 
             isGamePaused = true;
         }
+    }
+
+    private void GameOver()
+    {
+        if (isGameOver)
+        {
+            Time.timeScale = 0f;
+
+            gameOverUI.SetActive(true);
+
+            defaultUI.SetActive(false);
+        }
+    }
+
+    public void SetGameStatus(bool status)
+    {
+        isGameOver = status;
+
+        GameOver();
     }
 }

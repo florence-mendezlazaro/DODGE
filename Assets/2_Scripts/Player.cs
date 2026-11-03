@@ -22,6 +22,14 @@ public class Player : MonoBehaviour
         transform.position += movePosition * speed * Time.deltaTime;
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Obstacle"))
+        {
+            FindAnyObjectByType<GameManager>().SetGameStatus(true);
+        }
+    }
+
     private void OnEnable()
     {
         inputActions.Enable();
@@ -34,6 +42,8 @@ public class Player : MonoBehaviour
     {
         inputActions.Player.Move.performed -= OnMove;
         inputActions.Player.Move.canceled -= OnMove;
+
+        inputActions.Disable();
     }
 
     private void OnMove(InputAction.CallbackContext ctx)
